@@ -3,24 +3,30 @@ name: iOS Build
 on:
   push:
     branches: [ main ]
-  pull_request:
 
 jobs:
   build:
+
     runs-on: macos-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Show Xcode Version
-        run: xcodebuild -version
+      - name: Go to Project Folder
+        run: cd TestChatApp
+
+      - name: List Files
+        run: ls -la TestChatApp
 
       - name: List Schemes
-        run: xcodebuild -list
-
-      - name: Build iOS App
         run: |
+          cd TestChatApp
+          xcodebuild -list
+
+      - name: Build App
+        run: |
+          cd TestChatApp
           xcodebuild \
           -project TestChatApp.xcodeproj \
           -scheme TestChatApp \
