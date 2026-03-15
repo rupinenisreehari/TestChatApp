@@ -1,0 +1,42 @@
+name: iOS Build Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: sudo xcode-select -switch /Applications/Xcode.app
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+
+      - name: Install Dependencies
+        run: |
+          pod install
+
+      - name: Build App
+        run: |
+          xcodebuild \
+          -workspace TestChatApp.xcworkspace \
+          -scheme TestChatApp \
+          -sdk iphonesimulator \
+          -configuration Debug \
+          build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: build
